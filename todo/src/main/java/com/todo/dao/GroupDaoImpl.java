@@ -23,7 +23,7 @@ public class GroupDaoImpl extends JdbcDaoSupport implements GroupDao {
 	private SimpleJdbcInsert insertUserGroup;
 	private SimpleJdbcInsert insertGroup;
 
-	private static final String SELECT_GROUPS_BY_DEPT_ID = "SELECT G.*, UG.USER_ID, UD.DEPT_ID FROM GROUPS G JOIN USER_GROUP UG JOIN USER_DEPT UD WHERE G.GROUP_ID = UG.GROUP_ID AND UG.USER_ID = UD.USER_ID AND G.STATUS='A' AND UD.DEPT_ID = ?";
+	private static final String SELECT_GROUPS_BY_DEPT_ID = "{ call getGroupsByDept (?) }";
 	private static final String DELETE_GROUP = "UPDATE GROUPS SET STATUS= 'D' WHERE GROUP_ID = ?";
 	// private static final String SELECT_GROUP_BY_USER_ID_DEPT_ID = "SELECT
 	// G.*, UG.USER_ID, UD.DEPT_ID FROM GROUPS G JOIN USER_GROUP UG JOIN
@@ -34,7 +34,8 @@ public class GroupDaoImpl extends JdbcDaoSupport implements GroupDao {
 	@Override
 	public void initTemplateConfig() {
 		this.insertUserGroup = new SimpleJdbcInsert(getDataSource()).withTableName("USER_GROUP");
-		this.insertGroup = new SimpleJdbcInsert(getDataSource()).withTableName("GROUPS").usingGeneratedKeyColumns(GROUP_ID);
+		this.insertGroup = new SimpleJdbcInsert(getDataSource()).withTableName("GROUPS")
+				.usingGeneratedKeyColumns(GROUP_ID);
 	}
 
 	/**
